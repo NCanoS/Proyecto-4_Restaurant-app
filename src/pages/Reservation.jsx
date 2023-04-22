@@ -1,8 +1,8 @@
 import Header from "../components/Header";
 
-function Home() {
+function Reservation() {
     return(
     <Header/>
     )
 }
-export default Home;
+export default Reservation;
