@@ -8,7 +8,7 @@ import Reservation from '../pages/Reservation';
 function NavigationRoute() {
     return(
         <Routes>
-            <Route path='/' element={<Home/>}/>
+            <Route path='/' element={<AboutUs/>}/>
             <Route path='/menu' element={<Menu/>}/>
             <Route path='/aboutus' element={<AboutUs/>}/>
             <Route path='/reservation' element={<Reservation/>}/>
