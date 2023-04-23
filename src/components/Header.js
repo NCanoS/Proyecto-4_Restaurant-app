@@ -8,11 +8,14 @@ import { Image, Navbar } from 'react-bootstrap';
 
 function Header() {
     return(
-        <Navbar bg="dark" variant='dark' expand="lg">
+        <Navbar bg="dark" variant='dark' expand="lg" className='px-lg-3'>
             <Navbar.Brand>
                 <Link to='/' class="nav-link active" aria-current="page">
-                <Image src={logo} fluid rounded/>
-                    Restaurante Ucamp</Link>
+                <Image src={logo} fluid rounded width="50"/></Link>
+            </Navbar.Brand>
+            <Navbar.Brand>
+                <Link to='/' class="nav-link active" aria-current="page">
+                Restaurante Ucamp</Link>
             </Navbar.Brand>
             <Navbar.Toggle/>
 
@@ -26,7 +29,7 @@ function Header() {
             </Navbar.Brand>
             
             <Navbar.Brand>
-                <Link to='/aboutus' class="nav-link">Nosotros</Link>
+                <Link to='/' class="nav-link">Nosotros</Link>
             </Navbar.Brand>
             </Navbar.Collapse>
         </Navbar>
