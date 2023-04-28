@@ -1,21 +1,71 @@
 import { Button, Container, Form } from "react-bootstrap";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import { useState } from "react";
+import * as AWS from 'aws-sdk';
+
+const configuration = {
+    region: 'us-east-1',
+    secretAccessKey: 'BRHI9P/wpxe4PJtqjyf1Hc/xOYM92Gex1tksl59u',
+    accessKeyId: 'AKIA5FPNY26C3Z22KTFR'
+}
+
+AWS.config.update(configuration);
+const dynamo = new AWS.DynamoDB.DocumentClient();
+const table = 'Restaurant-Reservation';
 
 function Reservation() {
+
+    //initialize form variables
+    const [name,setName]= useState(null);
+    const [people,setPeople]= useState(null);
+    const [date,setDate]= useState(null);
+    const [time,setTime]= useState(null);
+
+    //Reservation function to send data to dynamodb
+    const book = async (event) => {
+        event.preventDefault();
+        
+        const paramsGET ={
+            TableName: table
+        }
+        const dataGET = await dynamo.scan(paramsGET).promise();
+        console.log(dataGET);
+
+        let paramsPUT = {
+            TableName: table,
+            Item: {
+                id_restaurant_reservation: dataGET.Items.length + 1,
+                user_name: name, 
+                people: people,
+                date: date,
+                time: time
+            }
+        }
+        let data2 = dynamo.put(paramsPUT, (e,data)=>{
+            if(e){
+                console.log('Error: ',e)
+            } else {
+                alert("Reservación hecha correctamente");
+            }
+        });
+        console.log(data2);
+    }
+
+    //Form
     return(
         <>
         <Header/>
         <br></br>
         <Container>
             <h1>Haga una reservación con nosotros</h1>
-        <Form>
+        <Form onSubmit={book}>
         <Form.Group controlId="reservationDate">
             <Form.Label>Introduzca quien hace la reservación:</Form.Label>
-            <Form.Control type="input" name="reservationName" placeholder="Nombre" required/>
+            <Form.Control type="input" value={name} placeholder="Nombre" required onChange={(reservationName)=>setName(reservationName.target.value)}/>
             <br></br>
             <Form.Label>¿Para cuántas personas es la reservación?</Form.Label>
-            <Form.Select aria-label="Default select" name="reservationAmount" required>
+            <Form.Select aria-label="Default select" value={people} required onChange={(reservationPeople)=>setPeople(reservationPeople.target.value)}> 
                 <option disabled>Seleccione la cantidad de personas</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -30,10 +80,10 @@ function Reservation() {
             </Form.Select>
             <br></br>
             <Form.Label>Elija una fecha:</Form.Label>
-            <Form.Control type="date" name="reservationDate" placeholder="Fecha" required/>
+            <Form.Control type="date" value={date} placeholder="Fecha" required onChange={(reservationDate)=>setDate(reservationDate.target.value)}/>
             <br></br>
             <Form.Label>Elija una hora:</Form.Label>
-            <Form.Select aria-label="Default select" name="reservationTime" required>
+            <Form.Select aria-label="Default select" value={time} required onChange={(reservationTime)=>setTime(reservationTime.target.value)}>
                 <option disabled>Seleccione una hora</option>
                 <option value="12">12:00</option>
                 <option value="13">13:00</option>
@@ -51,9 +101,6 @@ function Reservation() {
         <Button type="submit">Reservar</Button>
         </Form>
         <br></br>
-        <div class="invalid-reservation">
-
-        </div>
         </Container>
         <br></br>
         <Footer/>
